@@ -1,17 +1,11 @@
-# Customer Management API
+# Transfer/Account Management API
 
-This project is a Customer Management API built with Java, Spring Boot, and Maven. It follows the Hexagonal Architecture pattern to ensure a clean separation of concerns.
+This project is a Transfer/Account Management API built with Java, Spring Boot, and Maven. It follows the Hexagonal Architecture pattern to ensure a clean separation of concerns.
 
 ## Table of Contents
 
 - [Architecture](#architecture)
 - [Endpoints](#endpoints)
-- [Setup](#setup)
-- [Running the Application](#running-the-application)
-- [Testing](#testing)
-- [Recommended Plugins](#recommended-plugins)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Architecture
 
@@ -26,56 +20,17 @@ The project is organized following the Hexagonal Architecture (Ports and Adapter
 
 The API provides the following endpoints:
 
-- `GET /cliente/{id}`: Get customer by ID.
-- `GET /cliente/name/{customerName}`: Get customer by name.
-- `GET /cliente/documents/{id}`: Get customer documents by ID.
-- `GET /cliente/contacts/{id}`: Get customer contacts by ID.
-- `POST /cliente/{id}`: Save a new customer.
+- `POST /account`: Save a new account.
+- `GET /account/{id}`: List accounts by customerId.
+- `GET /account/number/{accountNumber}`: Get account by account number.
+- `POST /transfer`: Create a new transfer.
+- `GET /transfer/all/{id}`: Get all transfers from an account.
+- `GET /transfer/sent/{id}`: Get all sent transfers by an account.
+- `GET /transfer/received/{id}`: Get all received transfers by an account.
+- `POST /withdrawal`: Make a withdrawal.
+- `GET /withdrawal/{accountNumber}`: List withdrawals by account number.
+- `POST /deposit`: Make a deposit.
+- `GET /deposit/{accountNumber}`: List deposits by account number.
+
 
 Refer to the `openapi.yaml` file for detailed API specifications.
-
-## Setup
-
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/jeffultra/customer-management-api.git
-   cd customer-management-api
-   
-## Running the Application
-
-This application has a docker-compose file that allows you to run  a MySQL database with a single command.
-You need to have docker service installed and running on your machine and then run the following command:
-```sh
-docker compose up
-```
-
-If it is the first time you are running docker compose, it will take some time to download the images and start the 
-containers. Also, it will create the database and tables needed for the application to run.
-
-To run the application, use the following command:
-```sh
-mvn spring-boot:run
-```
-
-## Testing
-
-To run the tests, use the following command:
-```sh
-mvn test
-```
-### Generate JaCoCo Report
-
-To generate the JaCoCo code coverage report, use the following command:
-
-```sh
-mvn jacoco:report
-```
-
-The report will be generated in the target/site/jacoco directory. Open the index.html file in a web browser to view the coverage report.
-
-## Recommended Plugins
-
-* Docker
-* Github Copilot
-* OpenAPI (Swagger) Editor
-* SonarQube for IDE
