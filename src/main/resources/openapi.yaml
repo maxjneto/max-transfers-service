@@ -1,0 +1,307 @@
+openapi: 3.0.0
+info:
+  title: Transfer API
+  description: API for managing transfers, accounts, deposits, and withdrawals
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+paths:
+  /conta:
+    post:
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountDTO'
+      responses:
+        '201':
+          description: Account created successfully
+        '400':
+          description: Invalid input
+
+  /conta/{id}:
+    get:
+      summary: List accounts by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDTO'
+        '404':
+          description: Customer not found
+
+  /conta/{accountNumber}:
+    get:
+      summary: Get account by account number
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+        '404':
+          description: Account not found
+
+  /deposito:
+    post:
+      summary: Create a new deposit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositOrWithdrawalDTO'
+      responses:
+        '201':
+          description: Deposit created successfully
+        '400':
+          description: Invalid input
+
+  /deposito/{accountNumber}:
+    get:
+      summary: List deposits by account number
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDepositDTO'
+        '404':
+          description: Account not found
+
+  /saque:
+    post:
+      summary: Create a new withdrawal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositOrWithdrawalDTO'
+      responses:
+        '201':
+          description: Withdrawal created successfully
+        '400':
+          description: Invalid input
+
+  /saque/{accountNumber}:
+    get:
+      summary: List withdrawals by account number
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountWithdrawalDTO'
+        '404':
+          description: Account not found
+
+  /transferencia:
+    post:
+      summary: Create a new transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransferDTO'
+      responses:
+        '201':
+          description: Transfer created successfully
+        '400':
+          description: Invalid input
+
+  /transferencia/todas/{id}:
+    get:
+      summary: List all transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+        '404':
+          description: Account not found
+
+  /transferencia/enviadas/{id}:
+    get:
+      summary: List sent transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+        '404':
+          description: Account not found
+
+  /transferencia/recebidas/{id}:
+    get:
+      summary: List received transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+        '404':
+          description: Account not found
+
+components:
+  schemas:
+    AccountDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        accountNumber:
+          type: string
+        balance:
+          type: number
+          format: double
+
+    CreateAccountDTO:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        accountPassword:
+          type: string
+        customerId:
+          type: integer
+
+    DepositOrWithdrawalDTO:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        accountPassword:
+          type: string
+        amount:
+          type: number
+          format: double
+
+    AccountDepositDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        depositDate:
+          type: string
+          format: date
+
+    AccountWithdrawalDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        withdrawalDate:
+          type: string
+          format: date
+
+    CreateTransferDTO:
+      type: object
+      properties:
+        senderAccountNumber:
+          type: string
+        senderAccountPassword:
+          type: string
+        receiverAccountNumber:
+          type: string
+        amount:
+          type: number
+          format: double
+        transferType:
+          type: string
+
+    TransferDTO:
+      type: object
+      properties:
+        transferDate:
+          type: string
+          format: date
+        senderAccount:
+          $ref: '#/components/schemas/SimpleAccountDTO'
+        receiverAccount:
+          $ref: '#/components/schemas/SimpleAccountDTO'
+        amount:
+          type: number
+          format: double
+        transferType:
+          type: string
+
+    SimpleAccountDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        accountNumber:
+          type: string
